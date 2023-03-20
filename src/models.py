@@ -7,24 +7,49 @@ from sqlalchemy import create_engine
 from eralchemy2 import render_er
 
 Base = declarative_base()
-
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
+class User(Base):
+    __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    name = Column(String(250))
+    last_name = Column(String(250))
+    email = Column(String(250))
+    password = Column(String(250))
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
+class DetalleCharacter(Base):
+    __tablename__ = 'detalle_character'
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    name = Column(String(250))
+    species = Column(String(250))
+    birth_year = Column(String(250))
+    homeworld = Column(String(250))
+
+class DetallesPlanets(Base):
+    __tablename__ = 'detalles_planets'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250))
+    population = Column(String(250))
+    diameter = Column(Integer)
+    terrain = Column(String(250))
+    climate = Column(String(250))
+
+class FavCharacter(Base):
+    __tablename__ = 'fav_character'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    character_id = Column(Integer, ForeignKey('detalle_character.id'))
+    relation_character = relationship("DetaleCharacter")
+    relation_user = relationship("User")
+
+
+class FavPlanets(Base):
+    __tablename__ = 'fav_planets'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    planet_id = Column(Integer, ForeignKey('detalles_planets.id'))
+    relation_planets = relationship("DetallesPlanets")
+    relation_user = relationship("User")
+
+
 
     def to_dict(self):
         return {}
